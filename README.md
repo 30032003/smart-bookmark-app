@@ -28,3 +28,6 @@ npm run dev
 Add .env.local with:
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
+
+## Live Demo:
+https://smart-bookmark-app-five-gold.vercel.app

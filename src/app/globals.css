@@ -4,10 +4,11 @@
 
 /* Optional basic reset */
 html, body {
-  padding: 0;
-  margin: 0;
+  padding: 0px;
+  margin: 5px;
 }
 
 * {
   box-sizing: border-box;
+  border-radius: 2px;
 }

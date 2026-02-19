@@ -1,5 +1,12 @@
 # Smart Bookmark App
 
+## Key Highlights
+- Secure multi-user architecture using RLS
+- Real-time synchronization via WebSockets
+- Production deployment with environment-based configuration
+- Clean, modular React structure
+
+
 ## Live Demo
 https://smart-bookmark-app-five-gold.vercel.app
 

@@ -67,6 +67,14 @@ export default function Dashboard() {
       return;
     }
 
+    // URL validation
+    try {
+      new URL(url.trim());
+    } catch {
+      alert("Please enter a valid URL");
+      return;
+    }
+
     setLoading(true);
 
     const { error } = await supabase.from("bookmarks").insert([
@@ -83,6 +91,8 @@ export default function Dashboard() {
       setTitle("");
       setUrl("");
       fetchBookmarks(user.id);
+    } else {
+      console.error("Insert error:", error.message);
     }
   };
 
@@ -99,73 +109,87 @@ export default function Dashboard() {
     window.location.href = "/login";
   };
 
-  return (
-    <div className="p-8 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      <button
-        onClick={handleLogout}
-        className="px-4 py-2 bg-gray-700 text-white rounded mb-4"
-      >
-        Logout
-      </button>
-
-      {user && <p className="mb-6">Welcome, {user.email}</p>}
-
-      {/* Add Bookmark Form */}
-      <div className="mb-6 space-y-2">
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="text"
-          placeholder="URL"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-        <button
-          onClick={handleAddBookmark}
-          disabled={loading}
-          className="px-4 py-2 bg-green-600 text-white rounded disabled:opacity-50"
-        >
-          {loading ? "Adding..." : "Add Bookmark"}
-        </button>
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Loading...</p>
       </div>
+    );
+  }
 
-      {/* Bookmark List */}
-      <div>
-        <h2 className="text-lg font-semibold mb-2">Your Bookmarks</h2>
-
-        {bookmarks.length === 0 && <p>No bookmarks yet.</p>}
-
-        {bookmarks.map((bookmark) => (
-          <div
-            key={bookmark.id}
-            className="p-3 border rounded mb-2 flex justify-between items-center"
+  return (
+    <div className="min-h-screen bg-gray-100 flex justify-center items-start pt-12">
+      <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-xl">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition"
           >
-            <div>
-              <p className="font-medium">{bookmark.title}</p>
-              <a
-                href={bookmark.url}
-                target="_blank"
-                className="text-blue-600 text-sm"
-              >
-                {bookmark.url}
-              </a>
-            </div>
+            Logout
+          </button>
+        </div>
 
-            <button
-              onClick={() => handleDeleteBookmark(bookmark.id)}
-              className="px-3 py-1 bg-red-500 text-white rounded text-sm"
+        <p className="mb-6 text-gray-600">Welcome, {user.email}</p>
+
+        {/* Add Bookmark */}
+        <div className="mb-6 space-y-3">
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <input
+            type="text"
+            placeholder="URL"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+          <button
+            onClick={handleAddBookmark}
+            disabled={loading}
+            className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50"
+          >
+            {loading ? "Adding..." : "Add Bookmark"}
+          </button>
+        </div>
+
+        {/* Bookmark List */}
+        <div>
+          <h2 className="text-lg font-semibold mb-3">Your Bookmarks</h2>
+
+          {bookmarks.length === 0 && (
+            <p className="text-gray-500 text-sm">No bookmarks yet.</p>
+          )}
+
+          {bookmarks.map((bookmark) => (
+            <div
+              key={bookmark.id}
+              className="p-4 border rounded-lg mb-3 flex justify-between items-center hover:shadow transition"
             >
-              Delete
-            </button>
-          </div>
-        ))}
+              <div>
+                <p className="font-medium">{bookmark.title}</p>
+                <a
+                  href={bookmark.url}
+                  target="_blank"
+                  className="text-blue-600 text-sm hover:underline"
+                >
+                  {bookmark.url}
+                </a>
+              </div>
+
+              <button
+                onClick={() => handleDeleteBookmark(bookmark.id)}
+                className="px-3 py-1 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600 transition"
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

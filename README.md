@@ -1,33 +1,47 @@
 # Smart Bookmark App
 
+## Live Demo
+https://smart-bookmark-app-five-gold.vercel.app
+
 ## Tech Stack
 - Next.js (App Router)
-- Supabase (Auth, Postgres, Realtime)
+- Supabase (Auth + PostgreSQL + Realtime)
 - Tailwind CSS
 - Vercel (Deployment)
 
 ## Features
-- Google OAuth Login
-- Private user bookmarks
-- Add/Delete bookmarks
-- Real-time updates across tabs
-- Row Level Security enforced
+- Google OAuth Authentication
+- Secure user-specific bookmarks
+- Add & Delete bookmarks
+- Real-time updates across multiple tabs
+- Row Level Security (RLS) enforced at database level
 
 ## Architecture
-Frontend: Next.js
-Backend: Supabase (Auth + DB + Realtime)
+Frontend: Next.js (Client Components)
 
-## Security
-Row Level Security policies ensure users can only access their own bookmarks.
+Backend:
+- Supabase Auth for authentication
+- PostgreSQL for database
+- Supabase Realtime for live updates
 
-## Setup Locally
+## Security Implementation
+Row Level Security policies ensure:
+- Users can only view their own bookmarks
+- Users can only insert their own bookmarks
+- Users can only delete their own bookmarks
 
-npm install
-npm run dev
+All database-level access is protected using `auth.uid()`.
 
-Add .env.local with:
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
+## Realtime Implementation
+Enabled logical replication on the `bookmarks` table and subscribed to `postgres_changes` events to automatically refresh UI when database changes occur.
 
-## Live Demo:
-https://smart-bookmark-app-five-gold.vercel.app
+## Local Setup
+
+1. Clone repository
+2. Install dependencies:
+   npm install
+3. Create `.env.local`:
+   NEXT_PUBLIC_SUPABASE_URL=
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=
+4. Run:
+   npm run dev
